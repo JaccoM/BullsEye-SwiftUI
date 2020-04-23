@@ -8,8 +8,13 @@
 
 import SwiftUI
 
+// Content
 struct ContentView: View {
     // Variables
+    // Colors
+    let midnightBlue = Color(red: 0,
+                             green: 0.2,
+                             blue:0.4)
     // Game
     @State var target = Int.random(in: 1...100)
     @State var score = 0
@@ -27,60 +32,91 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack {
-            Spacer()
-            HStack {
-                // Hint Row
-                Text("Sleep de BullsEye naar de:")
-                Text("\(target)")
-            }
-            Spacer()
-            HStack {
-                // Slider Row
-                Text("1")
-                Slider(value: $sliderValue, in: 1...100)
-                Text("100")
-            }
-            Spacer()
-            HStack {
-                // Button Row
-                Button(action: {
-                    print("Punten verdiend: \(self.pointsForCurrentRound())")
-                    self.alertIsVisible = true
-                }) {
-                    Text("Gooien!")
-                }.alert(isPresented: $alertIsVisible){
-                    Alert(title: Text(alertTitle()),
-                          message: (Text(scoringMessage())),
-                          dismissButton: .default(Text("Nog een keer!")) {
-                            self.startNewRound()
-                        })
-                }
-            }
-            Spacer()
-            HStack {
-                // Score Row
-                Button(action: {
-                    self.startNewGame()
-                }) {
-                    Text("Opnieuw")
+        NavigationView{
+            VStack {
+                Spacer()
+                HStack {
+                    // Hint Row
+                    Text("Sleep de BullsEye naar de:")
+                    .modifier(LabelStyle())
+                    Text("\(target)")
+                    .modifier(ValueStyle())
                 }
                 Spacer()
-                Text("Score:")
-                Text("\(score)")
-                Spacer()
-                Text("Round:")
-                Text("\(round)")
-                Spacer()
-                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                    Text("Help")
+                HStack {
+                    // Slider Row
+                    Text("1")
+                    .modifier(LabelStyle())
+                    Slider(value: $sliderValue, in: 1...100)
+                        .accentColor((Color.green))
+                    Text("100")
+                    .modifier(LabelStyle())
                 }
+                Spacer()
+                HStack {
+                    // Button Row
+                    Button(action: {
+                        print("Punten verdiend: \(self.pointsForCurrentRound())")
+                        self.alertIsVisible = true
+                    }) {
+                        Text("Gooien!")
+                        .modifier(ButtonLargeTextStyle())
+                    }
+                    .background(Image("Button")
+                        .modifier(Shadow())
+                    )
+                    .alert(isPresented: $alertIsVisible){
+                        Alert(title: Text(alertTitle()),
+                              message: (Text(scoringMessage())),
+                              dismissButton: .default(Text("Nog een keer!")) {
+                                self.startNewRound()
+                            })
+                    }
+                }
+                Spacer()
+                HStack {
+                    // Score Row
+                    Button(action: {
+                        self.startNewGame()
+                    }) {
+                        HStack{
+                            Image("StartOverIcon")
+                            Text("Opnieuw").modifier(ButtonSmallTextStyle())
+                        }
+                    }
+                    .background((Image("Button"))
+                        .modifier(Shadow())
+                    )
+                    Spacer()
+                    Text("Score:")
+                    .modifier(LabelStyle())
+                    Text("\(score)")
+                    .modifier(ValueStyle())
+                    Spacer()
+                    Text("Round:")
+                    .modifier(LabelStyle())
+                    Text("\(round)")
+                    .modifier(ValueStyle())
+                    Spacer()
+                    NavigationLink(destination: AboutView()) {
+                        HStack{
+                            Image("InfoIcon")
+                            Text("Help").modifier(ButtonSmallTextStyle())
+                        }
+                    }
+                    .background((Image("Button"))
+                        .modifier(Shadow())
+                    )
+                }
+                .padding(.bottom, 20)
+                .accentColor(midnightBlue)
             }
-            .padding(.bottom, 20)
+            .onAppear(){
+                self.startNewGame()
+            }
+            .background(Image("Background"))
         }
-        .onAppear(){
-            self.startNewGame()
-        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     // Methods
@@ -140,6 +176,49 @@ struct ContentView: View {
     }
 }
 
+// View Modifiers
+struct LabelStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+        .font(Font.custom("Arial Rounded MT Bold", size: 18))
+        .foregroundColor(Color.white)
+        .modifier(Shadow())
+    }
+}
+
+struct ValueStyle: ViewModifier{
+    func body(content: Content) -> some View {
+        content
+        .font(Font.custom("Arial Rounded MT Bold", size: 24))
+        .foregroundColor(Color.yellow)
+        .modifier(Shadow())
+    }
+}
+
+struct Shadow: ViewModifier{
+    func body(content: Content) -> some View {
+        content
+        .shadow(color: Color.black, radius: 5, x: 2, y: 2)
+    }
+}
+
+struct ButtonLargeTextStyle: ViewModifier{
+    func body(content: Content) -> some View {
+        content
+        .font(Font.custom("Arial Rounded MT Bold", size: 18))
+        .foregroundColor(Color.black)
+    }
+}
+
+struct ButtonSmallTextStyle: ViewModifier{
+    func body(content: Content) -> some View {
+        content
+        .font(Font.custom("Arial Rounded MT Bold", size: 12))
+        .foregroundColor(Color.black)
+    }
+}
+
+// Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
