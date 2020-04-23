@@ -34,7 +34,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView{
             VStack {
-                Spacer()
+                Spacer().navigationBarTitle("🎯 BullsEye 🎯")
                 HStack {
                     // Hint Row
                     Text("Sleep de BullsEye naar de:")
@@ -49,6 +49,7 @@ struct ContentView: View {
                     .modifier(LabelStyle())
                     Slider(value: $sliderValue, in: 1...100)
                         .accentColor((Color.green))
+                        .animation(.easeOut)
                     Text("100")
                     .modifier(LabelStyle())
                 }
@@ -159,7 +160,7 @@ struct ContentView: View {
     }
     
     func resetSliderAndTarget() {
-        sliderValue = 50.0
+        sliderValue = Double.random(in: 1...100)
         target = Int.random(in: 1...100)
     }
     

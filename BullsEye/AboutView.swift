@@ -21,6 +21,7 @@ struct AboutView: View {
             VStack{
                     Text("🎯 BullsEye 🎯")
                         .modifier(AboutHeadingStyle())
+                        .navigationBarTitle("About BullsEye")
                     Text("Dit is BullsEye, een spel waarbij je punten kan winnen met sliden.")
                         .modifier(AboutBodyStyle())
                         .lineLimit(nil)
